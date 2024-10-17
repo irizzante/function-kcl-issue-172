@@ -1,0 +1,59 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: function-template-go
+spec:
+  compositeTypeRef:
+    apiVersion: example.crossplane.io/v1beta1
+    kind: TestXr
+  mode: Pipeline
+  pipeline:
+  - step: normal
+    functionRef:
+      name: kcl-function
+    input:
+      apiVersion: krm.kcl.dev/v1alpha1
+      kind: KCLRun
+      spec:
+        source: |
+          oxr = option("params").oxr
+          er = option("params")?.extraResources
+                  
+          dxr = {
+              **oxr
+          }
+          
+          details = {
+              apiVersion: "meta.krm.kcl.dev/v1alpha1"
+              kind: "ExtraResources"
+              requirements = {
+                  secret = {
+                      apiVersion: "v1",
+                      kind: "Secret",
+                      matchName: "my-secret"
+                  }
+              }
+          }
+
+          name = er?.secret[0]?.Resource?.metadata?.name if er?.secret else ""
+
+          secret = {
+              apiVersion: "v1"
+              kind: "Secret"
+              metadata: {
+                  name: "test"
+                  annotations: {
+                      "test": name
+                  }
+              }
+              stringData: {
+                  username: "admin"
+                  password: "123456"
+              }
+          }
+
+          items = [
+              details
+              dxr 
+              secret
+          ]

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-secret
+spec:
+  stringData:
+    username: admin
+    password: 123456

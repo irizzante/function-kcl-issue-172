@@ -1,0 +1,6 @@
+apiVersion: example.crossplane.io/v1beta1
+kind: TestXr
+metadata:
+  name: example
+spec:
+  count: 1
