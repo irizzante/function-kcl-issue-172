@@ -4,11 +4,7 @@ kind create cluster
 
 helm upgrade --install crossplane crossplane --repo https://charts.crossplane.io/stable --namespace crossplane-system --create-namespace --wait
 
-kubectl apply -f provider-kubernetes-incluster.yaml
-
 kubectl wait --for=condition=healthy provider.pkg.crossplane.io --all --timeout=5m
-
-kubectl apply -f providerconfig.yaml
 
 kubectl apply -f functions.yaml
 
